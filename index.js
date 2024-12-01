@@ -1,54 +1,43 @@
+const express = require('express')
+const app = express();
 const mongoose = require('mongoose')
+const path = require('path')
+const Chat = require("./models/chat.js")
+
+app.set("views", path.join(__dirname, "views"))
+app.set("view engine", "ejs")
 
 main()
-.then( ()=>{
-    console.log("connection sucessful")
-} )
+.then(()=>{
+    console.log("Connection Sucessful")
+})
 .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/test')
+  await mongoose.connect('mongodb://127.0.0.1:27017/whatsapp');
 }
 
-const userSchema = new mongoose.Schema({
-    name: String,
-    email : String,
-    age : Number,
+
+let chat1 = new Chat({
+    from : "neha",
+    to : "priya",
+    msg : "send me your exam sheets",
+    created_at : new Date(),
 })
 
-const User = mongoose.model( "User", userSchema );
+chat1.save()
+.then((res)=>{
+    console.log(res)
+})
 
 
 
-
-// User.find({age: {$gte:50}})
-// .then((res)=>{
-//   console.log(res[0].name)
-// })
-// .catch(err=>{console.log(err)})
+app.get("/", (req,resp)=>{
+    resp.send("Root Is Working")
+} )
 
 
 
-
-// User.insertMany([
-//   {name:"Tony", email:"tony@gmail.com",age:48},
-//   {name:"Bruce", email:"b23@gmail.com",age:32},
-//   {name:"Peter", email:"petu7@gmail.com",age:48},
-// ]).then((data)=>{
-//   console.log(data)
-// })
-
-
-
-
-// const  user2 = new User({
-//   name : "EVE",
-//   email : "aevem@yahho.com",
-//   age :58,
-// })
-
-// user2.save().then((res) =>{
-//     console.log(res)
-// }).catch((err)=>{
-//   console.log(err)
-// })
+app.listen(8080 , ()=>{
+    console.log("server is listeing in 8080")
+})
